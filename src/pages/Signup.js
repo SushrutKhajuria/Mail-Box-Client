@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { signupUser, formatEmail } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +11,9 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,6 +80,18 @@ const Signup = () => {
         <Button variant="primary" type="submit" className="w-100">
           Sign Up
         </Button>
+
+       <p className="mt-3 text-center">
+        Already have an account?{" "}
+        <span
+          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+          onClick={() => navigate("/login")}
+        >
+          Login here
+        </span>
+      </p>
+
+
       </Form>
     </Container>
   );
