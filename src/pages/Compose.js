@@ -29,6 +29,7 @@ const Compose = () => {
     subject,
     body: bodyHtml,
     date: new Date().toISOString(),
+    read: false,
   };
 
   const formattedReceiver = formatEmail(toEmail);

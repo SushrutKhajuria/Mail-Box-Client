@@ -6,6 +6,8 @@ import Welcome from "./pages/Welcome";
 import Compose from "./pages/Compose";
 import Inbox from "./pages/Inbox";   
 import Sent from "./pages/Sent";  
+import MailDetail from "./pages/MailDetail";
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -23,6 +25,8 @@ function App() {
         <Route path="/compose" element={<Compose />} />
         <Route path="/inbox" element={<Inbox />} />    
         <Route path="/sent" element={<Sent />} />       
+        <Route path="/mail/:mailId" element={<MailDetail />} />
+
       </Routes>
     </Router>
   );

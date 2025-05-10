@@ -1,6 +1,6 @@
 // src/pages/Inbox.js
 import { useEffect, useState } from "react";
-import { Container, ListGroup, Button, Row, Col, Spinner } from "react-bootstrap";
+import { Container, ListGroup, Button, Row, Col, Spinner, Badge } from "react-bootstrap";
 import { auth } from "../firebase";
 import { formatEmail } from "../services/authService";
 import axios from "axios";
@@ -27,8 +27,7 @@ const Inbox = () => {
             id,
             ...data[id],
           }));
-
-          setInbox(loadedInbox.reverse()); // newest on top
+          setInbox(loadedInbox.reverse());
         } else {
           setInbox([]);
         }
@@ -42,11 +41,16 @@ const Inbox = () => {
     fetchInbox();
   }, []);
 
+  const unreadCount = inbox.filter(mail => !mail.read).length;
+
   return (
     <Container className="mt-4">
       <Row className="mb-4">
         <Col>
-          <h3>📥 Your Inbox</h3>
+          <h3>
+            📥 Your Inbox{" "}
+            {unreadCount > 0 && <Badge bg="primary">Unread: {unreadCount}</Badge>}
+          </h3>
         </Col>
         <Col className="text-end">
           <Button variant="primary" onClick={() => navigate("/compose")}>
@@ -63,10 +67,31 @@ const Inbox = () => {
         <ListGroup>
           {inbox.length === 0 && <p>No mails received yet.</p>}
           {inbox.map((mail) => (
-            <ListGroup.Item key={mail.id}>
-              <strong>From:</strong> {mail.from} <br />
-              <strong>Subject:</strong> {mail.subject} <br />
-              <span dangerouslySetInnerHTML={{ __html: mail.body.slice(0, 100) + "..." }}></span>
+            <ListGroup.Item
+              key={mail.id}
+              onClick={() => navigate(`/mail/${mail.id}`)}
+              style={{ cursor: "pointer" }}
+            >
+              <Row>
+                <Col xs="1">
+                  {!mail.read && (
+                    <span
+                      style={{
+                        height: "10px",
+                        width: "10px",
+                        backgroundColor: "blue",
+                        borderRadius: "50%",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                  )}
+                </Col>
+                <Col>
+                  <strong>From:</strong> {mail.from} <br />
+                  <strong>Subject:</strong> {mail.subject} <br />
+                  <span dangerouslySetInnerHTML={{ __html: mail.body.slice(0, 100) + "..." }}></span>
+                </Col>
+              </Row>
             </ListGroup.Item>
           ))}
         </ListGroup>
