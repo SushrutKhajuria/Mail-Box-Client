@@ -6,6 +6,7 @@ import draftToHtml from "draftjs-to-html";
 import { Container, Form, Button } from "react-bootstrap";
 import { auth } from "../firebase";
 import { formatEmail } from "../services/authService";
+import Header from "../components/Header";
 import axios from "axios";
 
 const Compose = () => {
@@ -61,7 +62,9 @@ const Compose = () => {
 
 
   return (
-    <Container className="mt-5" style={{ maxWidth: "700px" }}>
+        <>
+        <Header />
+        <Container className="mt-5" style={{ maxWidth: "700px" }}>
       <h2 className="mb-4">Compose Mail</h2>
       <Form onSubmit={sendMailHandler}>
         <Form.Group className="mb-3">
@@ -97,6 +100,8 @@ const Compose = () => {
         <Button variant="primary" type="submit">Send</Button>
       </Form>
     </Container>
+        </>
+
   );
 };
 

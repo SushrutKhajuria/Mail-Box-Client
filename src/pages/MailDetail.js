@@ -5,6 +5,8 @@ import { Container, Button } from "react-bootstrap";
 import axios from "axios";
 import { auth } from "../firebase";
 import { formatEmail } from "../services/authService";
+import Header from "../components/Header";
+
 
 const MailDetail = () => {
   const { mailId } = useParams();
@@ -37,6 +39,8 @@ const MailDetail = () => {
   if (!mail) return <p>Loading...</p>;
 
   return (
+    <>
+    <Header />
     <Container className="mt-4">
       <h3>{mail.subject}</h3>
       <p><strong>From:</strong> {mail.from}</p>
@@ -46,6 +50,7 @@ const MailDetail = () => {
         ⬅ Back to Inbox
       </Button>
     </Container>
+    </>
   );
 };
 

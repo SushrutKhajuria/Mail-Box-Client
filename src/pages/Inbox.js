@@ -5,6 +5,8 @@ import { auth } from "../firebase";
 import { formatEmail } from "../services/authService";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+
 
 const Inbox = () => {
   const [inbox, setInbox] = useState([]);
@@ -43,7 +45,28 @@ const Inbox = () => {
 
   const unreadCount = inbox.filter(mail => !mail.read).length;
 
+  const handleDelete = async (mailId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this mail?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const formattedEmail = formatEmail(auth.currentUser.email);
+
+      await axios.delete(
+        `https://mail-box-client-7fb43-default-rtdb.firebaseio.com/users/${formattedEmail}/inbox/${mailId}.json?auth=${token}`
+      );
+
+      setInbox((prev) => prev.filter((mail) => mail.id !== mailId));
+    } catch (err) {
+      console.error("Failed to delete:", err.message);
+      alert("Failed to delete mail.");
+    }
+  };
+
   return (
+   <>
+   <Header />
     <Container className="mt-4">
       <Row className="mb-4">
         <Col>
@@ -69,34 +92,52 @@ const Inbox = () => {
           {inbox.map((mail) => (
             <ListGroup.Item
               key={mail.id}
-              onClick={() => navigate(`/mail/${mail.id}`)}
-              style={{ cursor: "pointer" }}
+              className="d-flex justify-content-between align-items-start"
             >
-              <Row>
-                <Col xs="1">
-                  {!mail.read && (
+              <div
+                onClick={() => navigate(`/mail/${mail.id}`)}
+                style={{ cursor: "pointer", flex: 1 }}
+              >
+                <Row>
+                  <Col xs="1">
+                    {!mail.read && (
+                      <span
+                        style={{
+                          height: "10px",
+                          width: "10px",
+                          backgroundColor: "blue",
+                          borderRadius: "50%",
+                          display: "inline-block",
+                        }}
+                      ></span>
+                    )}
+                  </Col>
+                  <Col>
+                    <strong>From:</strong> {mail.from} <br />
+                    <strong>Subject:</strong> {mail.subject} <br />
                     <span
-                      style={{
-                        height: "10px",
-                        width: "10px",
-                        backgroundColor: "blue",
-                        borderRadius: "50%",
-                        display: "inline-block",
+                      dangerouslySetInnerHTML={{
+                        __html: mail.body.slice(0, 100) + "...",
                       }}
                     ></span>
-                  )}
-                </Col>
-                <Col>
-                  <strong>From:</strong> {mail.from} <br />
-                  <strong>Subject:</strong> {mail.subject} <br />
-                  <span dangerouslySetInnerHTML={{ __html: mail.body.slice(0, 100) + "..." }}></span>
-                </Col>
-              </Row>
+                  </Col>
+                </Row>
+              </div>
+
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleDelete(mail.id)}
+                className="ms-3"
+              >
+                Delete
+              </Button>
             </ListGroup.Item>
           ))}
         </ListGroup>
       )}
     </Container>
+   </>
   );
 };
 

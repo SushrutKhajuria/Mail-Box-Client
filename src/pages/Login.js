@@ -22,7 +22,7 @@ const Login = () => {
       const { token } = await loginUser(email, password);
       localStorage.setItem("token", token);
       console.log("User logged in, token:", token);
-      navigate("/welcome");
+      navigate("/inbox");
     } catch (err) {
       setError("Invalid email or password.");
     }

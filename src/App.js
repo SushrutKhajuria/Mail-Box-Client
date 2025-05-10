@@ -2,31 +2,55 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import Welcome from "./pages/Welcome";
 import Compose from "./pages/Compose";
-import Inbox from "./pages/Inbox";   
-import Sent from "./pages/Sent";  
+import Inbox from "./pages/Inbox";
 import MailDetail from "./pages/MailDetail";
-
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
-        <Routes>
+      <Routes>
         <Route path="/" element={<Navigate to="/signup" />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/compose" element={<Compose />} />
-        <Route path="/inbox" element={<Inbox />} />    
-        <Route path="/sent" element={<Sent />} />       
-        <Route path="/mail/:mailId" element={<MailDetail />} />
 
+        <Route
+          path="/compose"
+          element={
+            <ProtectedRoute>
+              <Compose />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inbox"
+          element={
+            <ProtectedRoute>
+              <Inbox />
+            </ProtectedRoute>
+          }
+        />
+        {/* <Route
+          path="/sent"
+          element={
+            <ProtectedRoute>
+              <Sent />
+            </ProtectedRoute>
+          }
+        /> */}
+        <Route
+          path="/mail/:mailId"
+          element={
+            <ProtectedRoute>
+              <MailDetail />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
