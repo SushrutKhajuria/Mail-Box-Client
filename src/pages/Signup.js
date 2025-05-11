@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { signupUser, formatEmail } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 
 
 const Signup = () => {
@@ -80,19 +81,22 @@ const Signup = () => {
         <Button variant="primary" type="submit" className="w-100">
           Sign Up
         </Button>
-
-       <p className="mt-3 text-center">
-        Already have an account?{" "}
-        <span
-          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
-          onClick={() => navigate("/login")}
-        >
-          Login here
-        </span>
-      </p>
-
-
       </Form>
+
+            <Row className="mt-3">
+        <Col className="text-center">
+          Already have an account?{" "}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => navigate("/login")}
+          >
+            Log in
+          </Button>
+        </Col>
+      </Row>
+
+
     </Container>
   );
 };

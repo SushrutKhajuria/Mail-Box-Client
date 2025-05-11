@@ -6,11 +6,14 @@ import { formatEmail } from "../services/authService";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { useLocation } from "react-router-dom";
 
 
 const Inbox = () => {
   const [inbox, setInbox] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,9 +44,9 @@ const Inbox = () => {
     };
 
     fetchInbox();
-  }, []);
+  }, [location]);
 
-  const unreadCount = inbox.filter(mail => !mail.read).length;
+const unreadCount = inbox.filter(mail => mail.read === false).length;
 
   const handleDelete = async (mailId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this mail?");

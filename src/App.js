@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Compose from "./pages/Compose";
 import Inbox from "./pages/Inbox";
 import MailDetail from "./pages/MailDetail";
+import Sent from "./pages/Sent";  
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -35,14 +36,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
+        <Route
           path="/sent"
           element={
             <ProtectedRoute>
               <Sent />
             </ProtectedRoute>
           }
-        /> */}
+        /> 
         <Route
           path="/mail/:mailId"
           element={

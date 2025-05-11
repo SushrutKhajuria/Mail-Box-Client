@@ -6,8 +6,8 @@ const Header = () => {
   const navigate = useNavigate();
 
   const logoutHandler = () => {
-    localStorage.removeItem("token");       // ✅ remove token manually
-    navigate("/login");                     // ✅ redirect to login
+    localStorage.removeItem("token");       
+    navigate("/login");                   
   };
 
   return (

@@ -26,7 +26,7 @@ const MailDetail = () => {
         setMail(data);
 
         if (!data.read) {
-          await axios.patch(inboxPath, { read: true }); // ✅ update read status
+          await axios.patch(inboxPath, { read: true });
         }
       } catch (err) {
         console.error("Error loading mail:", err.message);
@@ -46,9 +46,14 @@ const MailDetail = () => {
       <p><strong>From:</strong> {mail.from}</p>
       <p><strong>To:</strong> {mail.to}</p>
       <div dangerouslySetInnerHTML={{ __html: mail.body }} />
-      <Button variant="secondary" className="mt-3" onClick={() => navigate("/inbox")}>
-        ⬅ Back to Inbox
-      </Button>
+      
+    <Button
+             variant="secondary"
+            className="mt-3"
+            onClick={() => navigate("/inbox", { replace: true })}                    >
+            ⬅ Back to Inbox
+   </Button>
+                 
     </Container>
     </>
   );

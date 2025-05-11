@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { loginUser } from "../services/authService";
+import { Row, Col } from "react-bootstrap";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -58,6 +60,19 @@ const Login = () => {
           Login
         </Button>
       </Form>
+
+            <Row className="mt-3">
+        <Col className="text-center">
+          Don’t have an account?{" "}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => navigate("/signup")}
+          >
+            Sign up
+          </Button>
+        </Col>
+      </Row>
     </Container>
   );
 };
