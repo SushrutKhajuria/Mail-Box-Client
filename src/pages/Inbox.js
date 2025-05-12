@@ -6,45 +6,55 @@ import { formatEmail } from "../services/authService";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { useLocation } from "react-router-dom";
 
 
 const Inbox = () => {
   const [inbox, setInbox] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchInbox = async () => {
-      try {
-        const userEmail = auth.currentUser?.email;
-        const token = await auth.currentUser.getIdToken();
-        const formattedEmail = formatEmail(userEmail);
+  let intervalId;
 
-        const { data } = await axios.get(
-          `https://mail-box-client-7fb43-default-rtdb.firebaseio.com/users/${formattedEmail}/inbox.json?auth=${token}`
-        );
+  const fetchInbox = async () => {
+    try {
+      const userEmail = auth.currentUser?.email;
+      const token = await auth.currentUser.getIdToken();
+      const formattedEmail = formatEmail(userEmail);
 
-        if (data) {
-          const loadedInbox = Object.keys(data).map((id) => ({
-            id,
-            ...data[id],
-          }));
-          setInbox(loadedInbox.reverse());
-        } else {
-          setInbox([]);
+      const { data } = await axios.get(
+        `https://mail-box-client-7fb43-default-rtdb.firebaseio.com/users/${formattedEmail}/inbox.json?auth=${token}`
+      );
+
+      if (data) {
+        const loadedInbox = Object.keys(data).map((id) => ({
+          id,
+          ...data[id],
+        })).reverse();
+
+        const oldInboxStr = JSON.stringify(inbox);
+        const newInboxStr = JSON.stringify(loadedInbox);
+
+        if (oldInboxStr !== newInboxStr) {
+          setInbox(loadedInbox);
         }
-      } catch (err) {
-        console.error("Error fetching inbox:", err.message);
+      } else {
         setInbox([]);
       }
-      setLoading(false);
-    };
+    } catch (err) {
+      console.error("Error fetching inbox:", err.message);
+      setInbox([]);
+    }
+    setLoading(false);
+  };
 
-    fetchInbox();
-  }, [location]);
+  fetchInbox(); // initial fetch
+  intervalId = setInterval(fetchInbox, 2000); 
+
+  return () => clearInterval(intervalId); 
+}, [inbox]); // 
+
 
 const unreadCount = inbox.filter(mail => mail.read === false).length;
 
