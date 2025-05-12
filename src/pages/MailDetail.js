@@ -2,16 +2,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
-import axios from "axios";
 import { auth } from "../firebase";
 import { formatEmail } from "../services/authService";
 import Header from "../components/Header";
-
+import useApi from "../hooks/useApi";
 
 const MailDetail = () => {
   const { mailId } = useParams();
   const [mail, setMail] = useState(null);
   const navigate = useNavigate();
+  const { getData, patchData } = useApi();
 
   useEffect(() => {
     const fetchAndMarkAsRead = async () => {
@@ -22,11 +22,11 @@ const MailDetail = () => {
       const inboxPath = `https://mail-box-client-7fb43-default-rtdb.firebaseio.com/users/${formattedEmail}/inbox/${mailId}.json?auth=${token}`;
 
       try {
-        const { data } = await axios.get(inboxPath);
+        const data = await getData(inboxPath);
         setMail(data);
 
         if (!data.read) {
-          await axios.patch(inboxPath, { read: true });
+          await patchData(inboxPath, { read: true });
         }
       } catch (err) {
         console.error("Error loading mail:", err.message);
@@ -40,21 +40,16 @@ const MailDetail = () => {
 
   return (
     <>
-    <Header />
-    <Container className="mt-4">
-      <h3>{mail.subject}</h3>
-      <p><strong>From:</strong> {mail.from}</p>
-      <p><strong>To:</strong> {mail.to}</p>
-      <div dangerouslySetInnerHTML={{ __html: mail.body }} />
-      
-    <Button
-             variant="secondary"
-            className="mt-3"
-            onClick={() => navigate("/inbox", { replace: true })}                    >
-            ⬅ Back to Inbox
-   </Button>
-                 
-    </Container>
+      <Header />
+      <Container className="mt-4">
+        <h3>{mail.subject}</h3>
+        <p><strong>From:</strong> {mail.from}</p>
+        <p><strong>To:</strong> {mail.to}</p>
+        <div dangerouslySetInnerHTML={{ __html: mail.body }} />
+        <Button variant="secondary" className="mt-3" onClick={() => navigate("/inbox", { replace: true })}>
+          ⬅ Back to Inbox
+        </Button>
+      </Container>
     </>
   );
 };
